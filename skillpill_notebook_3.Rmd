@@ -1,0 +1,693 @@
+---
+title: "R is for Reproducible"
+author: "Maggi Brisbin"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    number_sections: yes
+    theme: cerulean
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
+---
+
+Add some additional information to customize the knitted document: 
+```
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output:
+  html_document:
+    number_sections: yes
+    theme: cerulean
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
+```
+This will add a table of contents (toc) and will change the colors (theme: cerulean) 
+
+To find your favorite Rmarkdown theme: https://www.datadreaming.org/post/r-markdown-theme-gallery/
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.path = 'figures/')
+```
+
+```
+knitr::opts_chunk$set(cache=TRUE, fig.path='figures/', fig.width=8, fig.height=5 )
+```
+
+This saves all figures in the directory `figures` and sets the default figure size
+
+# R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+Rmarkdown Cheatsheet: https://rmarkdown.rstudio.com/lesson-15.html
+
+"#" hash signs indicate headers.
+
+The number of hashes equals the header level.
+
+## h2
+
+### h3
+
+### h4
+
+placing a single asterisk on either side of a phrase makes it *italic*. 
+
+double asterisks make a word or phrase **bold**.
+
+triple asterisks make a word or phrase bold ***and*** italic. 
+
+* a single asterisk at the beginning of a line makes a bullet 
+
+1. and a number at the begining of a line creates a numbered item. 
+1. this should add
+
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+Execute this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+## Including Plots & Images
+
+You can also embed plots, for example:
+
+(Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.)
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+```{r}
+```
+
+```{r name, echo=FALSE}
+#fhfwgjh
+```
+
+
+
+`echo =FALSE` will only display the output, not the code.
+
+Some more chunk options: 
+* Use `echo=FALSE` to avoid having the code itself shown.
+* Use `results="hide"` to avoid having any results printed.
+* Use `eval=FALSE` to have the code shown but not evaluated.
+* Use `warning=FALSE` and `message=FALSE` to hide any warnings or messages produced.
+* Use `fig.height` and `fig.width` to control the size of the figures produced (in inches).
+
+
+naming chunks = good practice (the above chunk was named pressure)
+* helps navigate around the document & this is what the figures will be named
+
+(check the Rproject directory after knitting)
+
+You can also include images from your local computer or from the web: 
+
+#\![](aRt/rmarkdown_rockstar.png)
+
+![](https://github.com/allisonhorst/stats-illustrations/raw/master/rstats-artwork/rmarkdown_wizards.png) 
+
+## Adding tables 
+
+Can type out tables: 
+
+| col name  | 
+|---------:|:-----------------:|:-----------------|
+| 1        | 1                | 1                |
+| 2        | 2                | 2                |
+
+
+Alternatively, you can use the `knitr` package to make mardown tables from data frames:
+
+```{r, echo = FALSE}
+library(knitr)
+kable(head(cars))
+```
+
+*left, right, center adjust* 
+
+## Knitting 
+When you knit the file, an HTML file containing the code and output will be saved alongside it (click the *Knit* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor (Viewer tab).
+
+# Rprojects 
+
+**Rproject Benefits:**
+
+* No need to set the working directory. All paths are relative to the directory containing the Rproject. 
+
+  Whenever you open your project, the working directory is automatically set to where your project is. This means your code   will not break when you work on a different computer.
+  
+*  RStudio projects allow you to open multiple projects at the same time with each open to its own project directory. This allows you to keep multiple projects open without them interfering with each other.
+
+
+Good organization / project lay out will: 
+
+* ensure the integrity of your data
+* make it easier to collaborate
+* make it easier to a pick a project back up after a break
+
+**Project Management tips:**
+
+* treat raw data as "read only"
+* create separate directory for "cleaned data" (or don't save altered data files - will see later on with dplyr) - `results`
+* generated output is disposable (because your analysis is reproducible!)
+* put scripts in `src` directory 
+* name all files to reflect their content or function (e.g. `fig1_pca_communitycomposition.jpg` not `Rplot1.jpg`)
+* avoid duplication - as code for a project matures, you will want to start splitting out functions into separate scripts. These scripts might be useful across multiple projects. When reusing a script, use a symbolic link to save space on your computer and avoid having to update a file in multiple places. Data that is reused can also be symbolically linked (`ln -s`) 
+
+**data for this workshop**
+
+following good project management practices, make a new directory called `data` and download the data we will be playing with in this workshop into that directory: 
+
+In terminal tab: 
+
+`mkdir data`
+
+`cd data`
+
+`wget https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/gh-pages/_episodes_rmd/data/gapminder_data.csv`
+
+curl
+
+We will use the data later, but we can get a general sense of the data by looking at it in the terminal, which will help us decide how to load it into R later: 
+
+`wc -l gapminder_data.csv`
+
+`head gapminder_data.csv`
+
+`cd -`
+
+# GitHub 
+
+go to your GitHub account and make a new repository 
+DO NOT initialize with a README 
+
+follow the instructions on the next page 
+
+(in terminal tab)
+```
+echo "# SkillPill_ReproducibleR" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/maggimars/SkillPill_ReproducibleR.git
+git push -u origin master
+```
+
+`README.md` is a markdown file, just like this Rmarkdown file in many ways- uses similar syntax.
+
+try also adding your data directory to your Github repository!
+
+Alternatively - you can use the Rstudio interface to version control with Git
+https://swcarpentry.github.io/git-novice/14-supplemental-rstudio/
+
+(I prefer command line) 
+
+# A few notes on getting help
+
+`?function_name`
+
+If you can't really remember a function name `??function_name`
+
+**pro-tip** *From within the function help page, you can highlight code in the Examples and hit Ctrl+Return to run it in RStudio console. This is gives you a quick way to get a feel for how a function works.*
+
+```{r}
+?kable
+```
+
+for special operators use quotes, e.g. `?"<-"
+Without any arguments, `vignette()` will list all vignettes for all installed packages; `vignette(package="package-name")` will list all available vignettes for package-name, and `vignette("vignette-name")` will open the specified vignette.
+And then there is always google.  
+# Reproducible and Streamlined Analyses (Day 2) 
+## Exploring the sample data
+We already looked at the sample data in Terminal and saw that it was a `.csv` file with 1705 lines and that it does have a header. 
+```{r}
+gapminder<- read.csv("data/gapminder_data.csv", header = TRUE)
+```
+
+View data in another tab with `View()`
+
+when your data is in a github repo - you can also use it directly from the repo:
+
+```{r}
+#library(data.table) # you might need to install this package
+#gapminder<- fread("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/gh-pages/_episodes_rmd/data/gapminder_data.csv", header = TRUE)
+```
+
+
+## Functions
+
+reusable! (and therefore reproducible!)
+
+Often start by writing a function within an interactive session. 
+
+Lets write a function that converts Fahrenheit to Celcius (bc I am moving to back to America and I'm going to need this)
+
+```{r}
+fahr_to_celc <- function(temp) {
+  celc <- ((temp - 32) * (5 / 9))
+  return(celc)
+}
+```
+
+
+get body temp in celcius: 
+(seems to be important these days)
+
+```{r}
+fahr_to_celc(98.6)
+```
+
+Stopifnot
+
+```{r}
+fahr_to_celc <- function(temp) {
+  stopifnot(is.numeric(temp))
+  celc <- ((temp - 32) * (5 / 9))
+  return(celc)
+}
+```
+
+What happens if you call with a number?
+```{r}
+fahr_to_celc(100)
+```
+
+What if you call with a string? 
+
+```{r}
+#fahr_to_celc("hot")
+```
+
+
+Combining Functions:
+
+Define two functions 
+
+1. fahrenheit to celcius 
+2. celcius to kelvin 
+
+```{r}
+#1
+fahr_to_celc <- function(temp) {
+  stopifnot(is.numeric(temp))
+  celc <- ((temp - 32) * (5 / 9))
+  return(celc)
+}
+
+#2
+celc_to_kelv <- function(temp) {
+  stopifnot(is.numeric(temp))
+  kelv <- ((temp + 273.15))
+  return(kelv)
+}
+
+```
+
+Define a new function that calls both these functions to convert fahrenheit to kelvin:
+
+```{r}
+
+fahr_to_kelv <- function(temp) {
+  stopifnot(is.numeric(temp))
+  tmp <- fahr_to_celc(temp)
+  out<- celc_to_kelv(tmp)
+  return(out)
+}
+fahr_to_kelv(100)
+
+```
+
+
+
+A more useful example: 
+
+
+Calculate gross domestic product in our data set:
+
+```{r}
+# Takes a dataset and multiplies the population column
+# with the GDP per capita column.
+calcGDP <- function(dat) {
+  gdp <- dat$pop * dat$gdpPercap
+  return(gdp)
+}
+```
+
+
+```{r}
+calcGDP(head(gapminder))
+
+gapminder$gdp<- calcGDP(gapminder)
+```
+
+But that is not super useful - lets add more arguments so we can extract per country per year : 
+
+```{r}
+# Takes a dataset and multiplies the population column
+# with the GDP per capita column.
+calcGDP <- function(dat, year=NULL, country=NULL) {
+  if(!is.null(year)) {
+    dat <- dat[dat$year %in% year, ]
+  }
+  if (!is.null(country)) {
+    dat <- dat[dat$country %in% country,]
+  }
+  gdp <- dat$pop * dat$gdpPercap
+  new <- cbind(dat, gdp=gdp)
+  return(new)
+}
+
+#This did not work for a data table but does work for a dataframe
+
+#Save this as a script in /src folder
+```
+
+default arguments are NULL
+
+
+```{r}
+head(calcGDP(gapminder, year=2007))
+```
+
+```{r}
+calcGDP(gapminder, country="Australia")
+```
+
+
+**Challenge:**
+Test out your GDP function by calculating the GDP for New Zealand in 1987. How does this differ from New Zealand’s GDP in 1952?
+
+```{r}
+```
+
+moving functions to rscripts and sourcing scripts 
+(best practices for project management!)
+```{r}
+
+calculateGDP(gapminder, year = 1987, country = "New Zealand")
+```
+ 
+
+
+## Dplyr 
+
+lesson materials:
+http://swcarpentry.github.io/r-novice-gapminder/13-dplyr/index.html
+
+Cheat Sheet:
+https://rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf
+
+![](https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/dplyr_wrangling.png)
+
+use "verbs" to wrangle your data
+
+for example: `filter()`
+
+![](https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/dplyr_filter.jpg)
+
+
+or `mutate()`:
+
+![](https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/dplyr_mutate.png)
+
+
+Getting started with dplyr:
+
+```{r}
+library(dplyr)
+```
+
+`select()`
+
+```{r}
+head(gapminder[,c("pop", "continent", "lifeExp")])
+```
+```{r}
+head(select(gapminder, pop, continent, lifeExp))
+```
+This is useful for removing a couple of keystrokes but the real power is in stringing verbs into pipes
+
+
+![](http://swcarpentry.github.io/r-novice-gapminder/fig/13-dplyr-fig1.png)
+
+
+
+pipes `%>%` [cmd+shift+m] and `filter()`
+
+```{r}
+head(gapminder %>% select(pop, continent, lifeExp))
+```
+```{r}
+head(gapminder %>%
+       select(pop, continent, lifeExp) %>%
+       filter(continent == "Asia", lifeExp >= 80))
+```
+
+**Challenge:**
+Write a single command (which can span multiple lines and includes pipes) that will produce a dataframe that has the African values for lifeExp, country and year, but not for other Continents. How many rows does your dataframe have and why?
+
+```{r}
+gapminder %>% 
+  filter(continent == "Africa") %>% 
+  select(lifeExp, country , year) 
+  
+#If you select for those columns first then you cannot filter by continent because you have removed it
+```
+
+
+Using `group_by()` and `summarize()`:
+
+```{r}
+gapminder %>% 
+  group_by(continent) %>% 
+  summarize(mean_lifeExp = mean(lifeExp))
+```
+Summarize is a function that will often get masked by other packages
+
+str(gap_by_continent)
+tibble [1,704 × 7] (S3: grouped_df/tbl_df/tbl/data.frame)
+
+![](http://swcarpentry.github.io/r-novice-gapminder/fig/13-dplyr-fig2.png)
+
+```{r}
+```
+
+![](http://swcarpentry.github.io/r-novice-gapminder/fig/13-dplyr-fig3.png)
+
+**Challenge:**
+
+Calculate the average life expectancy per country. Which has the longest average life expectancy and which has the shortest average life expectancy?
+```{r}
+
+gapminder %>% 
+  group_by(country) %>% 
+  summarize(average_life_Exp = mean (lifeExp)) %>% 
+  filter(average_life_Exp == range(average_life_Exp))
+
+
+```
+Iceland = 76.5
+Sierra Leone = 36.7
+
+
+using `count()` and `n()`:
+ 
+```{r}
+gapminder %>% filter(year == 2002) %>% 
+  count(continent)
+```
+
+```{r}
+gapminder %>% group_by(continent) %>% 
+  summarize(manualmean = sum(lifeExp)/n())
+```
+
+
+Using `mutate()`:
+
+```{r mutate}
+gapminder$GDP2 <- gapminder$pop * gapminder$gdpPercap
+
+head(gapminder %>%
+  select(country, pop, gdpPercap) %>% 
+  mutate(GDP3 = pop * gdpPercap))
+```
+
+```{r transmute}
+head(gapminder %>%
+  select(country, pop, gdpPercap) %>% 
+  transmute(GDP3 = pop * gdpPercap))
+```
+
+
+Connecting mutate() with logical filtering: `ifelse()`
+
+```{r}
+gapminder %>% 
+  mutate(gdp = ifelse(lifeExp >=25, gdpPercap*pop, NA)) %>% 
+  filter(is.na(gdp))
+```
+
+
+Some extras: 
+
+![](https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/dplyr_across.png)
+```{#r}
+gapminder %>% 
+  group_by(continent) %>% 
+  summarize(dplyr::across(where(is.numeric))
+```
+
+
+![](https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/dplyr_case_when.png)
+## END of Lesson 3
+
+Good to know: dplyr can be used directly with ggplot2
+
+```{r}
+library(ggplot2)
+gapminder %>%
+    # Filter countries that start with "A" or "Z"
+	filter(substr(country, start = 1, stop = 1) %in% c("A", "Z")) %>%
+	# Make the plot
+	ggplot(aes(x = year, y = lifeExp, color = continent)) +
+	geom_line() +
+	facet_wrap( ~ country)
+```
+## Beginning of Lesson 4
+
+## Tidyr
+
+Lesson Materials: http://swcarpentry.github.io/r-novice-gapminder/14-tidyr/index.html
+
+CheatSheet:
+https://github.com/rstudio/cheatsheets/blob/master/data-import.pdf
+
+be aware:  Gather/Spread has been renamed pivot_longer / pivot_wider 
+
+![](https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/tidyr_spread_gather.png)
+
+Extra information:
+```{r}
+vignette("pivot")
+```
+
+
+Long v. Wide
+
+SO what is this all about?
+
+Long and wide dataframe layouts mainly affect readability. For humans, the wide format is often more intuitive since we can often see more of the data on the screen due to its shape. However, the long format is more machine readable and is closer to the formatting of databases. The ID variables in our dataframes are similar to the fields in a database and observed variables are like the database values.
+
+![](http://swcarpentry.github.io/r-novice-gapminder/fig/14-tidyr-fig1.png)
+
+Researchers often want to reshape their dataframes from ‘wide’ to ‘longer’ layouts, or vice-versa. The ‘long’ layout or format is where:
+* each column is a variable
+* each row is an observation
+In the purely ‘long’ (or ‘longest’) format, you usually have 1 column for the observed variable and the other columns are ID variables.
+
+For the ‘wide’ format each row is often a site/subject/patient and you have multiple observation variables containing the same type of data. These can be either repeated observations over time, or observation of multiple variables (or a mix of both). You may find data input may be simpler or some other applications may prefer the ‘wide’ format. However, many of R’s functions have been designed assuming you have ‘longer’ formatted data. (Especially ggplot!)
+
+```{r}
+library(tidyr)
+```
+
+
+**Question:**
+
+Is gapminder a purely long, purely wide, or some intermediate format?
+
+
+Using `pivot`:
+
+Until now, we’ve been using the nicely formatted original gapminder dataset, but ‘real’ data (i.e. our own research data) will never be so well organized. Here let’s start with the wide formatted version of the gapminder dataset.
+
+**Challenge:**
+
+Download this dataset into your `data` directory:
+https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/gh-pages/_episodes_rmd/data/gapminder_wide.csv
+
+Then read the data into R and name the dataframe `gap_wide`:
+```{r}
+
+```
+ 
+ or
+ 
+```{r}
+#Added 'as.data.frame' to avoid problems associated with the data.table format it comes in
+
+gap_wide <- as.data.frame(fread("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/gh-pages/_episodes_rmd/data/gapminder_wide.csv", header=TRUE))
+
+dim(gap_wide)
+```
+ 
+
+That gives us this: 
+
+![](http://swcarpentry.github.io/r-novice-gapminder/fig/14-tidyr-fig2.png)
+
+and we want to practice pivoting longer with `pivot_longer()`:
+
+![](http://swcarpentry.github.io/r-novice-gapminder/fig/14-tidyr-fig3.png)
+
+```{r}
+gap_long <- gap_wide %>%
+  pivot_longer(
+    cols = c(starts_with('pop'), starts_with('lifeExp'), starts_with('gdpPercap')),
+    names_to = "obstype_year", values_to = "obs_values"
+  )
+str(gap_long)
+```
+
+
+
+![](http://swcarpentry.github.io/r-novice-gapminder/fig/14-tidyr-fig4.png)
+
+can also use "-" syntax! 
+
+
+using `separate`
+
+```{r}
+gap_long <- gap_long %>% separate(obstype_year, into = c('obs_type', 'year'), sep = "_")
+gap_long$year <- as.integer(gap_long$year)
+```
+
+**Challenge:**
+Using `gap_long`, calculate the mean life expectancy, population, and gdpPercap for each continent. Hint: use the `group_by()` and `summarize()` functions
+
+```{r}
+
+gap_long %>% 
+  group_by(continent, obs_type) %>% 
+  summarize(mean_obs = mean(obs_values))
+
+  
+```
+Try to Widen the long dataset back to the original intermediate
+```{r}
+gap_interm<- gap_long %>% 
+  pivot_wider(
+    values_from = 
+  )
+```
+
+Going in the other direction ... (time dependent)
+
+
+# Ggplot! 
